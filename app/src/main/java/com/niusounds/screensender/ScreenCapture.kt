@@ -3,11 +3,14 @@ package com.niusounds.screensender
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.util.DisplayMetrics.DENSITY_DEFAULT
+import android.view.WindowManager
+import kotlin.math.min
 
 class ScreenCapture(
   private val context: Context,
@@ -28,8 +31,14 @@ class ScreenCapture(
   }
 
   private fun start(mediaProjection: MediaProjection) {
-    val w = 360
-    val h = 640
+    val size = Point()
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+    windowManager!!.defaultDisplay.getRealSize(size)
+
+    val scale = min(360.0 / size.x, 640.0 / size.y)
+    val w = (size.x * scale).toInt()
+    val h = (size.y * scale).toInt()
+
     imageReader = ImageReader.newInstance(w, h, PixelFormat.RGBA_8888, 2).also {
       it.setOnImageAvailableListener(this, null)
     }
