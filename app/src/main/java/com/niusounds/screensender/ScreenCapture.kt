@@ -73,7 +73,9 @@ class ScreenCapture(
       ).apply {
         copyPixelsFromBuffer(plane.buffer)
       }
-      callback(bitmap)
+      // imageから作成したbitmapは変な幅になっているので切り抜く
+      val croppedBitmap = Bitmap.createBitmap(bitmap, 0, 0, image.width, image.height)
+      callback(croppedBitmap)
     }
   }
 }
