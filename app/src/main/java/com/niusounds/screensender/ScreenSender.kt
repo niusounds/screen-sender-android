@@ -15,7 +15,7 @@ class ScreenSender(
   private val port: Int = 9999,
   private val senderFactory: Sender.Factory
 ) {
-  private val queue = ArrayBlockingQueue<Bitmap>(10)
+  private val queue = ArrayBlockingQueue<Bitmap>(2)
   private val executor = Executors.newSingleThreadExecutor()
   private var future: Future<*>? = null
 
@@ -30,7 +30,7 @@ class ScreenSender(
       runCatching {
         while (!Thread.interrupted()) {
           val bitmap = queue.take()
-          val data = bitmap.toByteArray(Bitmap.CompressFormat.JPEG, 50)
+          val data = bitmap.toByteArray(Bitmap.CompressFormat.WEBP, 50)
           bitmap.recycle()
 
           sender.send(data)
