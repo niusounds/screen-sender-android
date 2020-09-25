@@ -1,3 +1,2 @@
-include ':receiver-view'
-rootProject.name = 'ScreenSender'
 include ':app'
+include ':receiver'
