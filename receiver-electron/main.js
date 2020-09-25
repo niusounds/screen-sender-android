@@ -1,5 +1,6 @@
-const electron = require('electron')
 const { app, BrowserWindow } = require('electron')
+
+const isDebug = process.argv.includes('-d');
 
 function createWindow() {
   // Create the browser window.
@@ -15,7 +16,9 @@ function createWindow() {
   win.loadFile('index.html')
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  if (isDebug) {
+    win.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished

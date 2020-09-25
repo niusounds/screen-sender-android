@@ -1,44 +1,44 @@
 package com.niusounds.screensender
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-  private val viewModel: MainViewModel by lazy {
-    ViewModelProvider(this)[MainViewModel::class.java]
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+        val viewModel: MainViewModel by viewModels()
 
-    setContentView(R.layout.activity_main)
+        // FAB icon
+        viewModel.isServiceRunning.observe(this) { serviceIsRunning ->
+            if (serviceIsRunning) {
+                floatingActionButton.setImageResource(R.drawable.ic_stop_screen_share)
+            } else {
+                floatingActionButton.setImageResource(R.drawable.ic_screen_share)
+            }
+        }
 
-    viewModel.isServiceRunning.observe(this, Observer { serviceIsRunning ->
-      if (serviceIsRunning) {
-        floatingActionButton.setImageResource(R.drawable.ic_stop_screen_share)
-      } else {
-        floatingActionButton.setImageResource(R.drawable.ic_screen_share)
-      }
-    })
+        // Remote address
+        viewModel.ipAddressInput.observe(this) {
+            if (ipAddressInput.text.toString() != it) {
+                ipAddressInput.setText(it)
+            }
+        }
 
-    viewModel.ipAddressInput.observe(this, Observer {
-      if (ipAddressInput.text.toString() != it) {
-        ipAddressInput.setText(it)
-      }
-    })
+        // Notify remote address input
+        ipAddressInput.addTextChangedListener {
+            if (it != null) {
+                viewModel.ipAddressInput(it.toString())
+            }
+        }
 
-    ipAddressInput.addTextChangedListener {
-      if (it != null) {
-        viewModel.ipAddressInput(it.toString())
-      }
+        // FAB event
+        floatingActionButton.setOnClickListener {
+            viewModel.clickFAB()
+        }
     }
-
-    floatingActionButton.setOnClickListener {
-      viewModel.clickFAB()
-    }
-  }
 }

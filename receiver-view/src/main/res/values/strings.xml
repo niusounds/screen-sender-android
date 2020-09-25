@@ -1,3 +1,4 @@
 <resources>
-  <string name="app_name">receiver-view</string>
+    <string name="app_name">Receiver</string>
+    <string name="waiting">Waiting UDP Screen Sender...</string>
 </resources>
