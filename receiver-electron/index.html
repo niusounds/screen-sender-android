@@ -4,47 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
     <title>UDP Screen Receiver</title>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link rel="stylesheet" href="nes.min.css">
     <style>
-    html,
-    body {
-      margin: 0;
-      height: 100%;
-    }
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
 
-    .container {
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="nes-field">
-        <label for="ip_address">IP Address</label>
-        <input type="text" id="ip_address" class="nes-input" readonly>
-    </div>
-    <div class="nes-container with-title is-centered" style="margin-top: 20px;">
-        <p class="title">Received image</p>
-        <div class="nes-container is-dark">
-            <img src="" alt="" id="image">
+    <div class="container">
+        <div class="nes-field">
+            <label for="ip_address">IP Address</label>
+            <input type="text" id="ip_address" class="nes-input" readonly>
         </div>
-    </div>
-
-    <section class="message-list" id="log-container">
-        <template id="template-message">
-            <div class="nes-balloon from-left">
-                <p class="message">Message text</p>
+        <div class="nes-container with-title is-centered" style="margin-top: 20px;">
+            <p class="title">Received image</p>
+            <div class="nes-container is-dark">
+                <img src="" alt="" id="image">
             </div>
-        </template>
-    </section>
+        </div>
 
-</div>
-<script src="script.js"></script>
+        <section class="message-list" id="log-container">
+            <template id="template-message">
+                <div class="nes-balloon from-left">
+                    <p class="message">Message text</p>
+                </div>
+            </template>
+        </section>
+
+    </div>
+    <script src="renderer.js"></script>
 </body>
 
 </html>

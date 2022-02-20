@@ -1,6 +1,12 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const os = require('os');
+
+const startReceiver = require('./receiver');
 
 const isDebug = process.argv.includes('-d');
+
+let server = null;
 
 function createWindow() {
   // Create the browser window.
@@ -8,9 +14,12 @@ function createWindow() {
     width: 1280,
     height: 720,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js'),
     }
-  })
+  });
+
+  // renderer.js to main.js API
+  ipcMain.handle('queryIpAddr', handleQueryIpAddr);
 
   // and load the index.html of the app.
   win.loadFile('index.html')
@@ -18,6 +27,22 @@ function createWindow() {
   // Open the DevTools.
   if (isDebug) {
     win.webContents.openDevTools()
+  }
+
+  server = startReceiver({
+    onReceiveDataUrl: (dataUrl) => win.webContents.send('onReceiveDataUrl', dataUrl),
+  })
+}
+
+async function handleQueryIpAddr() {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      // skip over non-ipv4 and internal (i.e. 127.0.0.1) addresses
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
   }
 }
 
@@ -33,6 +58,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+  server.close();
 })
 
 app.on('activate', () => {
