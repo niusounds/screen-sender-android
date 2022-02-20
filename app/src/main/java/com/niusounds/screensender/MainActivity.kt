@@ -4,40 +4,41 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import kotlinx.android.synthetic.main.activity_main.*
+import com.niusounds.screensender.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val viewModel: MainViewModel by viewModels()
 
         // FAB icon
         viewModel.isServiceRunning.observe(this) { serviceIsRunning ->
             if (serviceIsRunning) {
-                floatingActionButton.setImageResource(R.drawable.ic_stop_screen_share)
+                binding.floatingActionButton.setImageResource(R.drawable.ic_stop_screen_share)
             } else {
-                floatingActionButton.setImageResource(R.drawable.ic_screen_share)
+                binding.floatingActionButton.setImageResource(R.drawable.ic_screen_share)
             }
         }
 
         // Remote address
         viewModel.ipAddressInput.observe(this) {
-            if (ipAddressInput.text.toString() != it) {
-                ipAddressInput.setText(it)
+            if (binding.ipAddressInput.text.toString() != it) {
+                binding.ipAddressInput.setText(it)
             }
         }
 
         // Notify remote address input
-        ipAddressInput.addTextChangedListener {
+        binding.ipAddressInput.addTextChangedListener {
             if (it != null) {
                 viewModel.ipAddressInput(it.toString())
             }
         }
 
         // FAB event
-        floatingActionButton.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             viewModel.clickFAB()
         }
     }
