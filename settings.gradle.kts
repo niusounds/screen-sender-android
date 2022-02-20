@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "screen-sender-android"
-include ':app'
-include ':receiver'
+include(":app")
+include(":receiver")
