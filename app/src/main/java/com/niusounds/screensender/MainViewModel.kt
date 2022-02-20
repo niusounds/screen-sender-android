@@ -5,28 +5,21 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context: Context get() = getApplication()
-    private val serviceRunning: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-    val isServiceRunning: LiveData<Boolean> get() = serviceRunning
+    private val serviceRunning = MutableStateFlow(false)
+    val isServiceRunning: Flow<Boolean> = serviceRunning
 
-    private val ipAddressInputMutable: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
-    val ipAddressInput: LiveData<String> get() = ipAddressInputMutable
-
-    private val prefs: SharedPreferences by lazy {
+    private val prefs: SharedPreferences =
         context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-    }
 
-    init {
-        ipAddressInputMutable.value = prefs.getString("addr", "")
-    }
+    private val ipAddressInputMutable = MutableStateFlow(
+        value = prefs.getString("addr", "")!!
+    )
+    val ipAddressInput: Flow<String> = ipAddressInputMutable
 
     fun clickFAB() {
         val ipAddress = ipAddressInputMutable.value ?: return
@@ -35,7 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         prefs.edit {
             putString("addr", ipAddress)
         }
-        val serviceIsRunning = serviceRunning.value == true
+        val serviceIsRunning = serviceRunning.value
 
         if (serviceIsRunning) {
             ScreenSenderService.stop(context)
@@ -43,7 +36,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             ScreenSenderService.start(context, ipAddress)
         }
 
-        serviceRunning.postValue(!serviceIsRunning)
+        serviceRunning.value = !serviceIsRunning
     }
 
     fun ipAddressInput(ipAddressInput: String) {
