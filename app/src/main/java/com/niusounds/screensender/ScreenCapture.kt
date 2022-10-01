@@ -1,5 +1,6 @@
 package com.niusounds.screensender
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
@@ -30,6 +31,7 @@ class ScreenCapture(
         }
     }
 
+    @SuppressLint("WrongConstant") // I could not find right value instead of PixelFormat.RGBA_8888 please tell me
     private fun start(mediaProjection: MediaProjection) {
         val size = Point()
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
