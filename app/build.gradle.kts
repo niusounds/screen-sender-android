@@ -42,7 +42,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-ktx:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
